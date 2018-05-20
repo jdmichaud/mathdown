@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mathdown</title>
+  <!-- katex -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.9.0/dist/katex.min.css" integrity="sha384-TEMocfGvRuD1rIAacqrknm5BQZ7W7uWitoih+jMNFXQIbNl16bO8OZmylH/Vi/Ei" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.9.0/dist/katex.min.js" integrity="sha384-jmxIlussZWB7qCuB+PgKG1uLjjxbVVIayPJwi6cG6Zb4YKq0JIw+OMnkkEC7kYCq" crossorigin="anonymous"></script>
+  <!-- highlightjs -->
+  <link rel="stylesheet"
+        href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <!-- Marked -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.19/marked.min.js"></script>
+
+  <script type="text/javascript" src="https://unpkg.com/@jdmichaud/markdowner@~0.2.1/dist/markdowner.js"></script>
+  <script type="text/javascript">
+    function refresh() {
+      markdowner(document.getElementById('content').value).then(result => {
+        const div = document.getElementById('output');
+        div.innerHTML = result;
+        document.getElementById('console').value = 'Ready';
+      }).catch(error => {
+        document.getElementById('console').value = error.message;
+      }) ;
+    }
+
+    function getLineNumberAndColumnIndex(textarea){
+      var textLines = textarea.value.substr(0, textarea.selectionStart).split("\n");
+      var currentLineNumber = textLines.length;
+      var currentColumnIndex = textLines[textLines.length-1].length;
+      return {
+        currentLineNumber,
+        currentColumnIndex
+      };
+    }
+
+    function updateStatusBar() {
+      const contentArea = document.getElementById('content');
+      const {
+        currentLineNumber,
+        currentColumnIndex
+      } = getLineNumberAndColumnIndex(contentArea);
+      const selectedChars = contentArea.selectionEnd - contentArea.selectionStart;
+      let selectedCharsStr = '';
+      if (selectedChars !== 0) {
+        selectedCharsStr = `, ${selectedChars} selected characters`;
+      }
+      document.getElementById('status-container').innerText =
+        `Line ${currentLineNumber}, Column: ${currentColumnIndex}${selectedCharsStr}`;
+    }
+
+    window.onload = () => {
+      refresh();
+      let timeoutId = null;
+      document.getElementById('content').addEventListener('keydown', () => {
+        if (timeoutId === null) {
+          timeoutId = setTimeout(() => {
+            refresh();
+            timeoutId = null;
+          }, 500);
+        }
+      });
+      document.getElementById('content').addEventListener('keyup', updateStatusBar);
+      document.getElementById('content').addEventListener('click', updateStatusBar);
+      updateStatusBar();
+    };
+  </script>
+  <style type="text/css">
+    #container {
+      display: flex;
+      position: absolute;
+      top: 0px;
+      bottom: 0px;
+      left: 0px;
+      right: 0px;
+    }
+    #editor {
+      flex-grow: 2;
+    }
+    #output {
+      flex-grow: 1;
+      padding: 5px;
+    }
+    #content {
+      width: 100%;
+      height: 80%;
+      resize: none;
+      border: 0px;
+      border-right: 10px solid lightgrey;
+      box-sizing: border-box;
+      font-family: monospace;
+      font-size: 14px;
+      outline: 0px;
+      padding: 5px;
+    }
+    #console-container {
+      width: 100%;
+      height: 20%;
+    }
+    #console {
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      color: white;
+      border: 0px;
+      border-right: 10px solid lightgrey;
+      box-sizing: border-box;
+      font-family: monospace;
+      font-size: 14px;
+      outline: 0px;
+      padding: 5px;
+    }
+    #status-container {
+      background-color: lightgrey;
+      color: black;
+      font-size: 10px;
+      padding: 2px;
+      font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="editor">
+      <textarea id="content">
+# This is a test
+
+Let `$x$` be a variable.
+
+```math
+$$E = mc^2$$
+```
+
+```javascript
+function foo() {
+  return () => console.log('stay cool, daddy-O');
+}
+```</textarea>
+      <div id="status-container">
+      </div>
+      <div id="console-container">
+        <textarea id="console" readonly>Ready</textarea>
+      </div>
+    </div>
+    <div id="output">loading...</div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,3 @@
+static_path: static/
+port: 8000
+template: static/template.mustache
