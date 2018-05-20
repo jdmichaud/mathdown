@@ -27,12 +27,12 @@ Let's define the matrix `$A$`.
 ```
 
 Math mode:
-```
+````
 The projection then is:
-\`\`\`math
+```math
 $$p=A\hat x$$
-\`\`\`
 ```
+````
 
 The advantage of this solution is that if the markdown engine do not
 support math rendering, equation remains readable is `<code>` blocks.
