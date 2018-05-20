@@ -77,10 +77,14 @@ node index.js -c config.yml
 Go to the root page of your serveur, and a basic live editor can be used
 to test markdown with math.
 
+```
+http://mathdown.novidee.com/
+```
+
 ### As a renderer
 
 Once you markdown file is hosted somewhere (github, gist, bitbucket, etc),
 you can render it by passing a url to `mathdown`:
 ```
-http://mathdown.com/toHtml?url=http://your.markdown/url
+http://mathdown.novidee.com/toHtml?url=http://your.markdown/url
 ```
