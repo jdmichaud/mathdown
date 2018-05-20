@@ -18,9 +18,9 @@
       markdowner(document.getElementById('content').value).then(result => {
         const div = document.getElementById('output');
         div.innerHTML = result;
-        document.getElementById('console').value = 'Ready';
+        document.getElementById('console').innerText = 'Ready';
       }).catch(error => {
-        document.getElementById('console').value = error.message;
+        document.getElementById('console').innerText = error.message;
       }) ;
     }
 
@@ -75,11 +75,13 @@
       right: 0px;
     }
     #editor {
-      flex-grow: 2;
+      width: 50%;
     }
     #output {
-      flex-grow: 1;
+      width: 50%;
+      max-height: 100%;
       padding: 5px;
+      overflow: auto;
     }
     #content {
       width: 100%;
@@ -139,7 +141,7 @@ function foo() {
       <div id="status-container">
       </div>
       <div id="console-container">
-        <textarea id="console" readonly>Ready</textarea>
+        <div id="console">Ready</div>
       </div>
     </div>
     <div id="output">loading...</div>
