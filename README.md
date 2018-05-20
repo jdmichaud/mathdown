@@ -34,8 +34,9 @@ $$p=A\hat x$$
 ```
 ````
 
-The advantage of this solution is that if the markdown engine do not
-support math rendering, equation remains readable is `<code>` blocks.
+The advantage of this solution is that if the markdown engine does not
+support math rendering, your equations remain readable as text enclosed in
+`<code>` blocks.
 
 ## Run the server
 
