@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/jdmichaud/mathdown#readme",
   "dependencies": {
-    "@jdmichaud/markdowner": "^0.2.3",
+    "@jdmichaud/markdowner": "^0.2.4",
     "command-line-args": "^5.0.2",
     "command-line-usage": "^5.0.5",
     "express": "^4.16.3",
