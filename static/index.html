@@ -27,6 +27,8 @@
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/codemirror.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/addon/dialog/dialog.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/addon/fold/foldgutter.min.css">
+  <!-- lodash -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.min.js"></script>
   <!-- Markdowner -->
   <script type="text/javascript" src="https://unpkg.com/@jdmichaud/markdowner@~0.2.1/dist/markdowner.js"></script>
 
@@ -42,20 +44,42 @@
     }
 
     function updateStatusBar(editor) {
-      const {
-        line,
-        ch
-      } = editor.getCursor();
-      const selectedChars = editor.getSelection().length;
-      let selectedCharsStr = '';
-      if (selectedChars !== 0) {
-        selectedCharsStr = `, ${selectedChars} selected characters`;
-      }
+      const { line, ch } = editor.getCursor();
+      let selectedCharsStr = editor.getSelection().length === 0 ? '' : `, ${selectedChars} selected characters`;
       document.getElementById('status-container').innerText =
         `Line ${line}, Column: ${ch}${selectedCharsStr}`;
     }
 
+    function generateUid() {
+      function rand() { return Math.random().toString(16).substr(2); }
+      return rand() + rand() + rand().substr(7);
+    }
+
+    function loadFile(uid) {
+      return new Promise((resolve, reject) => {
+        fetch(`/file/${uid}`).then(body => resolve(body.text()));
+      });
+    }
+
+    function saveFile(uid, content) {
+      return fetch(`/file/${uid}`, {
+        method: 'POST',
+        body: JSON.stringify({ content }),
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        headers: { 'content-type': 'application/json' },
+      });
+    }
+
     window.onload = () => {
+      const uid = location.pathname.substr(1);
+      if (uid === '') {
+        // If on root, move to a new file
+        location.pathname = `/${generateUid()}`;
+      } else {
+        // If on file, load it
+        loadFile(uid).then(content => editor.setValue(content));
+      }
+
       var editor = CodeMirror.fromTextArea(document.getElementById('content'), {
         mode: 'gfm',
         lineNumbers: true,
@@ -66,9 +90,6 @@
         rulers: [{ color: '#DDD', column: 80, lineStyle: "dashed" }],
         showTrailingSpace: true,
       });
-      // editor.getSearchCursor = () => ({
-      //   findNext: () => {},
-      // });
       editor.getWrapperElement().style.height = "90%";
 
       refresh(editor);
@@ -81,9 +102,12 @@
           }, 500);
         }
       });
+      editor.on('keydown', _.debounce(() => saveFile(uid, editor.getValue()), 1000));
+
       editor.on('keyup', () => updateStatusBar(editor));
       editor.getWrapperElement().addEventListener('mouseup', () => updateStatusBar(editor));
       updateStatusBar(editor);
+      editor.focus();
     };
   </script>
   <style type="text/css">
@@ -148,20 +172,7 @@
 <body>
   <div id="container">
     <div id="editor">
-      <textarea id="content">
-# This is a test
-
-Let `$x$` be a variable.
-
-```math
-$$E = mc^2$$
-```
-
-```javascript
-function foo() {
-  return () => console.log('stay cool, daddy-O');
-}
-```</textarea>
+      <textarea id="content"></textarea>
       <div id="status-container">
       </div>
       <div id="console-container">

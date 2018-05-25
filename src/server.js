@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
 const lodash = require('lodash');
 const Backend = require('./backend');
 
@@ -33,9 +34,13 @@ const Server = function Server(config) {
   // Serving static folder
   app.use(express.static(config.static_path));
 
+  // parse application/json
+  app.use(bodyParser.json());
+
   // The routes
   this.backend = new Backend(config);
-  lodash.forIn(this.backend.routes, (handler, route) => app.get(route, handler));
+  lodash.forIn(this.backend.routes.gets, (handler, route) => app.get(route, handler));
+  lodash.forIn(this.backend.routes.posts, (handler, route) => app.post(route, handler));
 
   // Error handler
   app.use((err, req, res, next) => {
