@@ -1,5 +1,4 @@
 const fs = require('fs');
-const path = require('path');
 const lodash = require('lodash');
 const fetch = require('node-fetch');
 const toHtml = require('@jdmichaud/markdowner');
@@ -35,11 +34,8 @@ const Backend = function Backend(config) {
         }
       },
       '/[0-9a-z]{32}': async (req, res) => {
-        const projectRoot = path.join(
-          path.dirname(require.main.filename),
-          config.static_path);
         res.sendFile('index.html', {
-          root: projectRoot,
+          root: config.static_path,
         });
       },
       '/file/[0-9a-z]{32}': async (req, res) => {
