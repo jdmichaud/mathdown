@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mathdown</title>
+  <!-- katex -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"></script>
+  <!-- highlightjs -->
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <!-- Marked -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.19/marked.min.js"></script>
+  <!-- Latex2JS -->
+  <script src="/latex2html5.bundle.js"></script>
+  <link rel="stylesheet" type="text/css" href="/latex2js.css">
+  <!-- Markdowner -->
+  <script type="text/javascript" src="https://unpkg.com/@jdmichaud/markdowner@~0.3.0/dist/markdowner.js"></script>
+
+  <script type="text/javascript">
+    window.onload = () => {
+      function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+      }
+
+      const url = getParameterByName('url');
+      fetch(url).then(body => body.text().then(content => {
+        const div = document.getElementById('container');
+        markdowner(content).then(result => {
+          div.innerHTML = result;
+        }).catch(error => {
+          div.innerHTML = error.message;
+        }) ;
+      }));
+    };
+  </script>
+  <style type="text/css">
+    #container {
+      width: 600px;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+</body>
+</html>

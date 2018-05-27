@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/jdmichaud/mathdown#readme",
   "dependencies": {
-    "@jdmichaud/markdowner": "^0.2.4",
+    "@jdmichaud/markdowner": "^0.3.1",
     "body-parser": "^1.18.3",
     "command-line-args": "^5.0.2",
     "command-line-usage": "^5.0.5",
@@ -30,6 +30,7 @@
     "highlight.js": "^9.12.0",
     "js-yaml": "^3.11.0",
     "katex": "^0.9.0",
+    "latex2js": "^1.2.0",
     "lodash": "^4.17.10",
     "marked": "^0.3.19",
     "morgan": "^1.9.0",
