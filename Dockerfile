@@ -8,6 +8,7 @@ RUN cd /root && \
   tar xf node-v10.2.1-linux-x64.tar.xz && \
   (export PATH=$PATH:/root/node-v10.2.1-linux-x64/bin; npm install -g n) && \
   (export PATH=$PATH:/root/node-v10.2.1-linux-x64/bin; n 10.2.1) && \
+  ln -s /usr/local/n/versions/node/10.2.1/bin/* /usr/local/bin && \
   npm update -g npm && \
   rm -fr node-v10.2.1-linux-x64 node-v10.2.1-linux-x64.tar.xz
 # Copy the project in the container
