@@ -3,9 +3,6 @@
   "version": "0.1.0",
   "description": "A markdown editor with math using markdowner",
   "main": "index.js",
-  "scripts": {
-    "test": "npm test"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jdmichaud/mathdown.git"

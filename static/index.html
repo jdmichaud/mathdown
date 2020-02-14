@@ -81,7 +81,9 @@
       const uid = location.pathname.substr(1);
       if (uid === '') {
         // If on root, move to a new file
-        location.pathname = `/${generateUid()}`;
+        const newUid = generateUid();
+        saveFile(newUid, '');
+        location.pathname = `/${newUid}`;
       } else {
         // If on file, load it
         loadFile(uid).then(content => editor.setValue(content));
