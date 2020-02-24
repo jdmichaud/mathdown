@@ -77,18 +77,7 @@
       });
     }
 
-    window.onload = () => {
-      const uid = location.pathname.substr(1);
-      if (uid === '') {
-        // If on root, move to a new file
-        const newUid = generateUid();
-        saveFile(newUid, '');
-        location.pathname = `/${newUid}`;
-      } else {
-        // If on file, load it
-        loadFile(uid).then(content => editor.setValue(content));
-      }
-
+    window.onload = async () => {
       var editor = CodeMirror.fromTextArea(document.getElementById('content'), {
         mode: 'gfm',
         lineNumbers: true,
@@ -99,6 +88,19 @@
         rulers: [{ color: '#DDD', column: 80, lineStyle: "dashed" }],
         showTrailingSpace: true,
       });
+
+      const uid = location.pathname.substr(1);
+      if (uid === '') {
+        // If on root, move to a new file
+        const newUid = generateUid();
+        await saveFile(newUid, '');
+        location.pathname = `/${newUid}`;
+      } else {
+        // If on file, load it
+        const content = await loadFile(uid);
+        editor.setValue(content);
+      }
+
       editor.getWrapperElement().style.height = "90%";
 
       refresh(editor);
