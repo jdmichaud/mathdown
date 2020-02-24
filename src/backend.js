@@ -45,12 +45,12 @@ const Backend = function Backend(config) {
           root: config.static_path,
         });
       },
-      '/[0-9a-z]{32}': async (req, res) => {
+      '/[0-9a-z]+': async (req, res) => {
         res.sendFile('index.html', {
           root: config.static_path,
         });
       },
-      '/file/[0-9a-z]{32}': async (req, res) => {
+      '/file/[0-9a-z]+': async (req, res) => {
         const uid = req.url.substr(1);
         if (cache[uid] === undefined) {
           cache[uid] = '';
@@ -59,7 +59,7 @@ const Backend = function Backend(config) {
       },
     },
     posts: {
-      '/file/[0-9a-z]{32}': async (req, res) => {
+      '/file/[0-9a-z]+': async (req, res) => {
         const uid = req.url.substr(1);
         cache[uid] = req.body.content;
         res.sendStatus(200);
